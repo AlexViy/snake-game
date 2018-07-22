@@ -140,7 +140,7 @@
           ]
           document.getElementById('score').innerHTML = score;
           
-          if(gameIsRunning.clearTimeout) {
+          if(gameIsRunning.clearTimeout()) {
             gameIsRunning.clearTimeout();
           }
         main();
