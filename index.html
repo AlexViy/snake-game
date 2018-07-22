@@ -14,7 +14,7 @@
         const CANVAS_BACKGROUND_COLOUR = "white";
         const SNAKE_COLOUR = 'lightgreen';
         const SNAKE_BORDER_COLOUR = 'darkgreen';
-        
+        let gameIsRunning;
         let snake = [
           {x: 170, y: 150},
           {x: 160, y: 150},
@@ -77,6 +77,11 @@
             } else {
               snake.pop();
             }
+            const hitLeftWall = snake[0].x < 0;
+            const hitRightWall = snake[0].x > gameCanvas.width - 10;
+            const hitToptWall = snake[0].y < 0;
+            const hitBottomWall = snake[0].y > gameCanvas.height - 10;
+            
         };
 
         function isFoodOnSnake(part) {
@@ -102,17 +107,29 @@
           const hitRightWall = snake[0].x > gameCanvas.width - 10;
           const hitToptWall = snake[0].y < 0;
           const hitBottomWall = snake[0].y > gameCanvas.height - 10;
+          
+          if(hitRightWall) {
+            snake[0].x = 0;
+          }
+          if(hitLeftWall) {
+            snake[0].x = 290;
+          }
+          if(hitBottomWall) {
+            snake[0].y = 0;
+          }
+          if(hitToptWall) {
+            snake[0].y = 290;
+          }
 
-          return hitLeftWall || 
-                hitRightWall || 
-                hitToptWall ||
-                hitBottomWall
+          
         };
         
         resetButton.addEventListener('click', resetGame);
         
         function resetGame () {
           score = 0;
+          dx = 10;
+          dy = 0;
           snake = [
             {x: 170, y: 150},
             {x: 160, y: 150},
@@ -120,6 +137,10 @@
             {x: 140, y: 150},
           ]
           document.getElementById('score').innerHTML = score;
+          
+          if(gameIsRunning.clearTimeout) {
+            gameIsRunning.clearTimeout();
+          }
         main();
         };
 
@@ -128,7 +149,7 @@
             return;
           }
           
-          setTimeout(function onTick() {
+          gameIsRunning = setTimeout(function onTick() {
             clearCanvas();
             advanceSnake();
             drawFood();
